@@ -1,14 +1,20 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
+  <div class="app">
+    <!-- <div class="nav">
+      <router-link to="/" class="btn">Fancy Chat</router-link>
+      <router-link to="/" class="btn" v-if="loggedIn">Log Out</router-link>
+      <router-link to="/login" class="btn btn-primary" v-if="!loggedIn">Log In</router-link>
+    </div> -->
+    <Navbar v-bind:loggedIn="loggedVariable || false" />
     <router-view/>
   </div>
 </template>
 
 <style>
+.nav {
+  display: flex;
+  justify-content: space-between;
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -30,3 +36,15 @@
   color: #42b983;
 }
 </style>
+
+<script>
+// @ is an alias to /src
+import Navbar from '@/components/Navbar.vue';
+
+export default {
+  name: 'Nav',
+  components: {
+    Navbar,
+  },
+};
+</script>
