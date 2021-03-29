@@ -1,15 +1,16 @@
 <template>
     <div class="chat">
-        <div class="messagebody scrollable">
-            <div class="messagebody" v-if="messages.length == 0">
+        <div>{{ testLog }} </div>
+        <div class="messagebody scrollable" v-if="$store.state.loggedIn === true">
+            <div class="messagebody" v-if="$store.state.messages.length == 0">
                 <h2>No messages here :(</h2>
             </div>
-            <div class="wrapper" v-else>
+            <div class="wrapper" v-if="$store.state.messages.length > 0">
                 <div class="chatMessages card mt-2"
-                v-for="message in messages" :key="message.message">
+                v-for="message in $store.state.messages" :key="message._id">
                     <div class="card-body chat-box">
                         <div class="dateTime text-muted card-subtitle">
-                            {{ message.dateTime.getHours() }}:{{ message.dateTime.getMinutes() }}
+                            {{ message.hour }}:{{ message.minute }}
                         </div>
                         <div class="username card-title"> {{ message.username }}</div>
                         <div class="message card-text"> {{ message.message }}</div>
@@ -17,50 +18,88 @@
                 </div>
             </div>
         </div>
+        <div class="notLogged" v-if="$store.state.loggedIn === false">
+          <p>Need to be logged in to view chat</p>
+        </div>
         <div class="bottom footer chatbox">
             <form action="" class="chat-form">
-                <label for="message" class="chat-label">Enter Message: </label>
+                <label for="message" class="chat-label">⌨</label>
                 <input disabled type="text" name="message" id="message"
-                class="chat-text" v-if="username == null">
-                <button disabled type="submit"
-                class="btn btn-success" v-if="username == null">Send</button>
-                <input type="text" name="message" id="message"
-                class="chat-text" autofocus v-if="username != null">
-                <button type="submit"
-                class="btn btn-success" v-if="username != null">Send</button>
+                class="chat-text" v-if="$store.state.loggedIn == false">
+                <button disabled
+                class="btn btn-success" v-if="$store.state.loggedIn == false">Send</button>
+                <input type="text" name="message" id="message" v-model="message"
+                class="chat-text" autofocus v-if="$store.state.loggedIn != false">
+                <button
+                class="btn btn-success" v-if="$store.state.loggedIn != false"
+                @click.prevent="pushMessage">Send</button>
             </form>
         </div>
     </div>
 </template>
 
 <script>
-const API_URL = 'http://localhost:5000/messages';
-
-// remove these once they're implemented
-console.log(API_URL);
+const API_URL = 'http://localhost:5000/';
 
 export default {
-  name: 'Chat',
-  data: () => ({
-    messages: [
-      {
-        username: 'Test',
-        message: 'This is the message',
-        dateTime: new Date(),
-      },
-      {
-        username: 'Test2',
-        message: 'This is the message2',
-        dateTime: new Date(),
-      },
-      {
-        username: 'Test3',
-        message: 'This is the message3',
-        dateTime: new Date(),
-      },
-    ],
-    username: null,
-  }),
+  name: 'App',
+  data() {
+    return {
+      messages: [],
+      message: '',
+      error: '',
+      testLog: '',
+    };
+  },
+  methods: {
+    pushMessage() {
+      fetch(`${API_URL}message`, {
+        method: 'POST',
+        body: JSON.stringify({
+          username: this.$store.state.username,
+          message: this.message,
+        }),
+        headers: {
+          'content-type': 'application/json',
+        },
+      })
+        .then((response) => response.json())
+        .then((result) => {
+          if (result.details) {
+            // there was an error...
+            const error = result.details
+              .map((detail) => detail.message)
+              .join('. ');
+            this.error = error;
+          } else {
+            this.error = '';
+            this.showMessageForm = false;
+            this.message = '';
+            this.$store.commit('pushMessage', result);
+            if (this.messages.length === 0) {
+              this.messages = this.$store.state.messages;
+            }
+          }
+        });
+    },
+    updateMessages(array) {
+      this.$store.commit('updateMessages', array);
+    },
+    logIn() {
+      this.$store.commit('logIn', { username: sessionStorage.getItem('user') });
+    },
+  },
+  mounted() {
+    fetch(API_URL)
+      .then((response) => response.json())
+      .then((result) => {
+        this.messages = result;
+        this.updateMessages(result);
+      });
+    if (sessionStorage.getItem('user')) {
+      this.logIn();
+    }
+  },
 };
 </script>
 
@@ -117,6 +156,26 @@ export default {
     }
 
     .chat-label {
-        margin-top: .5em;
+      margin: 0 -.5em;
+      font-size: 1.7em;
+      position: relative;
+    }
+
+    .chat-label:hover::after{
+      content: 'Enter text to chat';
+      position: absolute;
+      top: -1.5em;
+      left: .5em;
+      font-size: .7em;
+      width: 8em;
+      background: #aca65d;
+      border: solid #333 2px;
+    }
+
+    .notLogged {
+      font-size: 1.5em;
+      text-align: center;
+      margin: 40vh auto;
+      color: rgb(139, 45, 45)
     }
 </style>

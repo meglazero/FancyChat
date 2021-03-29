@@ -5,7 +5,7 @@
       <router-link to="/" class="btn" v-if="loggedIn">Log Out</router-link>
       <router-link to="/login" class="btn btn-primary" v-if="!loggedIn">Log In</router-link>
     </div> -->
-    <Navbar v-bind:loggedIn="loggedVariable || false" />
+    <Navbar />
     <router-view/>
   </div>
 </template>
@@ -15,7 +15,7 @@
   display: flex;
   justify-content: space-between;
 }
-#app {
+/* #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -34,7 +34,7 @@
 
 #nav a.router-link-exact-active {
   color: #42b983;
-}
+} */
 </style>
 
 <script>
