@@ -72,10 +72,6 @@ export default {
         .then((result) => {
           if (result.error) {
             this.error = result.error;
-          // there was an error...
-            // const error = result.error
-            //   .map((detail) => detail.message)
-            //   .join('. ');
           } else {
             this.error = '';
             this.showMessageForm = false;
@@ -107,7 +103,6 @@ export default {
           } else {
             this.error = result;
             this.showMessageForm = false;
-            // this.logIn = !this.logIn;
             sessionStorage.setItem('user', result.username);
             this.$store.commit('logIn', {
               username: result.username,

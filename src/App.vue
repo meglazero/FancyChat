@@ -1,10 +1,5 @@
 <template>
   <div class="app">
-    <!-- <div class="nav">
-      <router-link to="/" class="btn">Fancy Chat</router-link>
-      <router-link to="/" class="btn" v-if="loggedIn">Log Out</router-link>
-      <router-link to="/login" class="btn btn-primary" v-if="!loggedIn">Log In</router-link>
-    </div> -->
     <Navbar />
     <router-view/>
   </div>
@@ -15,26 +10,6 @@
   display: flex;
   justify-content: space-between;
 }
-/* #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-} */
 </style>
 
 <script>
