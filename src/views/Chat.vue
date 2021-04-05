@@ -39,7 +39,7 @@
 </template>
 
 <script>
-const API_URL = 'http://localhost:5000/';
+const API_URL = 'http://localhost:5050/';
 
 export default {
   name: 'App',

@@ -39,7 +39,7 @@
 <script>
 const hasha = require('hasha');
 
-const API_URL = 'http://localhost:5000/';
+const API_URL = 'http://localhost:5050/';
 
 export default {
   name: 'Navbar',
